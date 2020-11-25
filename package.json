@@ -19,6 +19,7 @@
     "node": "10"
   },
   "dependencies": {
+    "dayjs": "1.9.5",
     "webpack-dev-server": "^3.11.0"
   }
 }

@@ -6,6 +6,7 @@ import {createSortTemplate} from "./view/sort";
 import {createCreatingPointFormTemplate} from "./view/creating-form";
 import {createEditingPointFormTemplate} from "./view/editing-form";
 import {createPointTemplate} from "./view/point";
+import {generateTask} from "./mock/point";
 
 const POINT_COUNT = 3;
 
@@ -29,3 +30,5 @@ render(tripEventsSectionElement, createEditingPointFormTemplate(), `beforeend`);
 for (let i = 0; i < POINT_COUNT; i++) {
   render(tripEventsSectionElement, createPointTemplate(), `beforeend`);
 }
+
+generateTask();
