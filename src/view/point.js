@@ -1,4 +1,4 @@
-import {getDuration, formatToMonthDay, getStartEndDateTime} from "../utils";
+import {getDuration, formatToMonthDay, getStartEndDateTime, createElement} from "../utils";
 
 const getOfferTemplate = (offer) => {
   return `<li class="event__offer">
@@ -47,3 +47,28 @@ export const createPointTemplate = (point) => {
                 </button>
               </div>`;
 };
+
+export default class Point {
+  constructor(point) {
+    this._task = point;
+    this._element = null;
+  }
+
+
+  getTemplate() {
+    return createPointTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+}

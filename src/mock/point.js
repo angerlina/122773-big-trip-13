@@ -41,6 +41,5 @@ export const generatePoint = () => {
   const startTime = generateRandomDate();
   const endTime = generateRandomDateAfter(startTime);
   const result = {...point, type, startTime, endTime, offers};
-  console.log(result);
   return result;
 };

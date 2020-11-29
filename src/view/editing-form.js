@@ -1,4 +1,4 @@
-import {formatToDateTimeYear} from "../utils";
+import {createElement, formatToDateTimeYear} from "../utils";
 import {ALL_OFFERS, POINT_TYPES, TOWNS} from "../mock/data";
 
 const getTownsOptionsList = () => {
@@ -44,7 +44,7 @@ const getOffersTemplate = (point) => {
                                 </section>` : ``;
 };
 
-export const createEditingPointFormTemplate = (point = {type: `Flight`, destination: {}}) => {
+const createEditingPointFormTemplate = (point) => {
   const {type, destination: {town, description}, startTime, endTime, price} = point;
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
@@ -99,3 +99,29 @@ export const createEditingPointFormTemplate = (point = {type: `Flight`, destinat
                 </section>
               </form>`;
 };
+
+export default class EditingForm {
+
+  constructor(point = {type: `Flight`, destination: {}}) {
+    this._point = point;
+    this._element = null;
+  }
+
+
+  getTemplate() {
+    return createEditingPointFormTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+}
