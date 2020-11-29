@@ -49,6 +49,17 @@ export const render = (container, element, place) => {
   }
 };
 
+export const getTripCost = (points) => {
+  let cost = 0;
+  points.forEach((point) => {
+    cost += Number(point.price);
+    point.offers.forEach((offer) => {
+      cost += Number(offer.cost);
+    });
+  });
+  return cost;
+};
+
 const randomizeHoursAndMinutes = (dayjsDate) => {
   return dayjsDate.add(getRandomInteger(0, 60), `hour`).add(getRandomInteger(0, 60), `minute`);
 };

@@ -1,21 +1,22 @@
-import {createElement} from "../utils";
+import {createElement, getTripCost} from "../utils";
 
-export const createTripCostTemplate = (cost) => {
-  return `<p class="trip-info__cost">
+export const createTripCostTemplate = (points) => {
+  const cost = getTripCost(points);
+  return cost ? `<p class="trip-info__cost">
               Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
-            </p>`;
+            </p>` : `<p/>`;
 };
 
 
 export default class TripCost {
-  constructor(cost) {
+  constructor(points) {
     this._element = null;
-    this._cost = cost;
+    this._points = points;
   }
 
 
   getTemplate() {
-    return createTripCostTemplate(this._cost);
+    return createTripCostTemplate(this._points);
   }
 
   getElement() {
