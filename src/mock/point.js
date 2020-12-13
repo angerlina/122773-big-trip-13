@@ -37,6 +37,5 @@ export const generatePoint = () => {
   point.offers = filteredOffers.length ? getRandomItemsFromArray(filteredOffers) : [];
   point.startTime = generateRandomDate();
   point.endTime = generateRandomDateAfter(point.startTime);
-  const s = {...point, point}
   return point;
 };
