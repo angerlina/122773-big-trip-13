@@ -54,17 +54,18 @@ export default class Point extends AbstractView {
     super();
     this._point = point;
     this._clickOpenFormHandler = this._clickOpenFormHandler.bind(this);
+    this._rollupButtonElement = this.getElement().querySelector(`.event__rollup-btn`);
   }
 
   _clickOpenFormHandler(evt) {
     evt.preventDefault();
     this._callback.openFormClick();
-    this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._clickOpenFormHandler);
+    this._rollupButtonElement.removeEventListener(`click`, this._clickOpenFormHandler);
   }
 
   setClickOpenFormHandler(callback) {
     this._callback.openFormClick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickOpenFormHandler);
+    this._rollupButtonElement.addEventListener(`click`, this._clickOpenFormHandler);
   }
 
   getTemplate() {

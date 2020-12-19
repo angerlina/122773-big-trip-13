@@ -108,19 +108,19 @@ export default class EditingForm extends AbstractView {
     this._point = point;
     this._closeFormClickHandler = this._closeFormClickHandler.bind(this);
     this._submitFormHandler = this._submitFormHandler.bind(this);
+    this._rollupButtonElement = this.getElement().querySelector(`.event__rollup-btn`);
   }
 
   _closeFormClickHandler(evt) {
     evt.preventDefault();
     this._callback.closeFormClickHandler();
-    this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._closeFormClickHandler);
+    this._rollupButtonElement.removeEventListener(`click`, this._closeFormClickHandler);
   }
 
   setCloseFormClickHandler(callback) {
     this._callback.closeFormClickHandler = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeFormClickHandler);
+    this._rollupButtonElement.addEventListener(`click`, this._closeFormClickHandler);
   }
-
 
   _submitFormHandler(evt) {
     evt.preventDefault();

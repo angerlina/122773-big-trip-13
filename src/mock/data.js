@@ -6,7 +6,6 @@ export const PHOTOS_COUNT = 5;
 export const MAX_PHOTO_URL_NUMBER = 30;
 export const MAX_PRICE = 300;
 export const POINT_COUNT = 15;
-export const MAX_TRIP_COST = 5000;
 
 export const ALL_OFFERS = [
   {
