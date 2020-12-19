@@ -6,10 +6,11 @@ import Sort from "./view/sort";
 import EditingForm from "./view/editing-form";
 import Point from "./view/point";
 import {generatePoint} from "./mock/point";
-import {compare, render, RenderPosition} from "./utils";
+import {compare} from "./utils";
 import {POINT_COUNT} from "./mock/data";
 import PointsList from "./view/points-list";
 import NoPoints from "./view/no-points";
+import {render, RenderPosition} from "./utils/render";
 
 const points = Array(POINT_COUNT).fill().map(generatePoint);
 points.sort((sort1, sort2) => compare(sort1.startTime, sort2.startTime));
