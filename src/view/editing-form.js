@@ -106,7 +106,30 @@ export default class EditingForm extends AbstractView {
   constructor(point = {type: `Flight`, destination: {}}) {
     super();
     this._point = point;
-    this._element = null;
+    this._closeFormClickHandler = this._closeFormClickHandler.bind(this);
+    this._submitFormHandler = this._submitFormHandler.bind(this);
+  }
+
+  _closeFormClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeFormClickHandler();
+    this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._closeFormClickHandler);
+  }
+
+  setCloseFormClickHandler(callback) {
+    this._callback.closeFormClickHandler = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeFormClickHandler);
+  }
+
+
+  _submitFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.submitFormHandler();
+  }
+
+  setSubmitFormHandler(callback) {
+    this._callback.submitFormHandler = callback;
+    this.getElement().addEventListener(`submit`, this._submitFormHandler);
   }
 
   getTemplate() {

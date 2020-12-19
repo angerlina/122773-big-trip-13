@@ -19,7 +19,6 @@ export const createRouteInfoTemplate = (points) => {
 export default class RouteInfo extends AbstractView {
   constructor(points) {
     super();
-    this._element = null;
     this._points = points;
   }
 

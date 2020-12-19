@@ -24,9 +24,6 @@ const renderPoint = (pointsListElement, point) => {
   const pointComponent = new Point(point);
   render(pointsListElement, pointComponent, RenderPosition.BEFOREEND);
 
-  const closeButtonInForm = editFormComponent.getElement().querySelector(`.event__rollup-btn`);
-  const openButtonInView = pointComponent.getElement().querySelector(`.event__rollup-btn`);
-
   const replacePointToForm = () => {
     replaceChild(editFormComponent, pointComponent);
   };
@@ -38,15 +35,13 @@ const renderPoint = (pointsListElement, point) => {
 
   const handleOpenForm = () => {
     replacePointToForm();
-    openButtonInView.removeEventListener(`click`, handleOpenForm);
-    closeButtonInForm.addEventListener(`click`, handleCloseForm);
+    editFormComponent.setCloseFormClickHandler(handleCloseForm);
     document.addEventListener(`keydown`, onEscKeyDown);
   };
 
   const handleCloseForm = () => {
     replaceFormToCard();
-    openButtonInView.addEventListener(`click`, handleOpenForm);
-    closeButtonInForm.removeEventListener(`click`, handleCloseForm);
+    pointComponent.setClickOpenFormHandler(handleOpenForm);
     document.removeEventListener(`keydown`, onEscKeyDown);
   };
 
@@ -58,13 +53,8 @@ const renderPoint = (pointsListElement, point) => {
     }
   };
 
-  pointComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handleOpenForm);
-
-
-  editFormComponent.getElement().addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
-    handleCloseForm();
-  });
+  pointComponent.setClickOpenFormHandler(handleOpenForm);
+  editFormComponent.setSubmitFormHandler(handleCloseForm);
 };
 
 const renderPoints = (pointsListElement, pointsForRendering) => {

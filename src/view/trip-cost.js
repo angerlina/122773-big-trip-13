@@ -12,13 +12,10 @@ export const createTripCostTemplate = (points) => {
 export default class TripCost extends AbstractView {
   constructor(points) {
     super();
-    this._element = null;
     this._points = points;
   }
-
 
   getTemplate() {
     return createTripCostTemplate(this._points);
   }
-
 }

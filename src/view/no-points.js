@@ -5,12 +5,6 @@ export const createNoPointsTemplate = () => {
 };
 
 export default class NoPoints extends AbstractView {
-  constructor() {
-    super();
-    this._element = null;
-  }
-
-
   getTemplate() {
     return createNoPointsTemplate();
   }

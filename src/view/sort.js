@@ -32,7 +32,6 @@ export const createSortTemplate = (points) => {
 export default class Sort extends AbstractView {
   constructor(points) {
     super();
-    this._element = null;
     this._points = points;
   }
 

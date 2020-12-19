@@ -52,12 +52,22 @@ export const createPointTemplate = (point) => {
 export default class Point extends AbstractView {
   constructor(point) {
     super();
-    this._task = point;
-    this._element = null;
+    this._point = point;
+    this._clickOpenFormHandler = this._clickOpenFormHandler.bind(this);
   }
 
+  _clickOpenFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.openFormClick();
+    this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._clickOpenFormHandler);
+  }
+
+  setClickOpenFormHandler(callback) {
+    this._callback.openFormClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickOpenFormHandler);
+  }
 
   getTemplate() {
-    return createPointTemplate(this._task);
+    return createPointTemplate(this._point);
   }
 }
