@@ -1,4 +1,5 @@
-import {getDuration, formatToMonthDay, getStartEndDateTime, createElement} from "../utils";
+import {getDuration, formatToMonthDay, getStartEndDateTime} from "../utils";
+import AbstractView from "./AbstractView";
 
 const getOfferTemplate = (offer) => {
   return `<li class="event__offer">
@@ -48,8 +49,9 @@ export const createPointTemplate = (point) => {
               </div>`;
 };
 
-export default class Point {
+export default class Point extends AbstractView {
   constructor(point) {
+    super();
     this._task = point;
     this._element = null;
   }
@@ -58,17 +60,4 @@ export default class Point {
   getTemplate() {
     return createPointTemplate(this._task);
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
 }

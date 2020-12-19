@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./AbstractView";
 
 export const createPointsListTemplate = () => {
   return `<section class="trip-events">
@@ -6,8 +6,9 @@ export const createPointsListTemplate = () => {
           </section>`;
 };
 
-export default class PointsList {
+export default class PointsList extends AbstractView {
   constructor() {
+    super();
     this._element = null;
   }
 
@@ -15,17 +16,4 @@ export default class PointsList {
   getTemplate() {
     return createPointsListTemplate();
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
 }

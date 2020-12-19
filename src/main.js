@@ -6,8 +6,8 @@ import Sort from "./view/sort";
 import EditingForm from "./view/editing-form";
 import Point from "./view/point";
 import {generatePoint} from "./mock/point";
-import {compare, getRandomInteger, render, RenderPosition} from "./utils";
-import {MAX_TRIP_COST, POINT_COUNT} from "./mock/data";
+import {compare, render, RenderPosition} from "./utils";
+import {POINT_COUNT} from "./mock/data";
 import PointsList from "./view/points-list";
 import NoPoints from "./view/no-points";
 

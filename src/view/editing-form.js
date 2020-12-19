@@ -1,5 +1,6 @@
-import {createElement, formatToDateTimeYear} from "../utils";
+import {formatToDateTimeYear} from "../utils";
 import {ALL_OFFERS, POINT_TYPES, TOWNS} from "../mock/data";
+import AbstractView from "./AbstractView";
 
 const getTownsOptionsList = () => {
   const result = `<datalist id="destination-list-1">
@@ -100,28 +101,15 @@ const createEditingPointFormTemplate = (point) => {
               </form>`;
 };
 
-export default class EditingForm {
+export default class EditingForm extends AbstractView {
 
   constructor(point = {type: `Flight`, destination: {}}) {
+    super();
     this._point = point;
     this._element = null;
   }
 
-
   getTemplate() {
     return createEditingPointFormTemplate(this._point);
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
 }

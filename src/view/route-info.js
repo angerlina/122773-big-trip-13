@@ -1,5 +1,6 @@
-import {createElement, formatToMonthDay} from "../utils";
+import {formatToMonthDay} from "../utils";
 import dayjs from "dayjs";
+import AbstractView from "./AbstractView";
 
 export const createRouteInfoTemplate = (points) => {
   const startDate = points && points.length && points[0].startTime;
@@ -15,27 +16,14 @@ export const createRouteInfoTemplate = (points) => {
             </div>`;
 };
 
-export default class RouteInfo {
+export default class RouteInfo extends AbstractView {
   constructor(points) {
+    super();
     this._element = null;
     this._points = points;
   }
 
-
   getTemplate() {
     return createRouteInfoTemplate(this._points);
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
 }
