@@ -4,7 +4,7 @@ import {
   getRandomInteger,
   getRandomItemFromArray,
   getRandomItemsFromArray
-} from "../utils";
+} from "../utils/utils";
 import {
   ALL_OFFERS,
   DESCRIPTION_MATERIAL,
@@ -14,6 +14,8 @@ import {
   POINT_TYPES,
   TOWNS
 } from "./data";
+
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const generateDestination = () => {
   const descriptionWords = DESCRIPTION_MATERIAL.split(` `);
@@ -28,6 +30,7 @@ const generateDestination = () => {
 
 export const generatePoint = () => {
   const point = {
+    id: generateId(),
     price: getRandomInteger(0, MAX_PRICE),
     destination: generateDestination(),
     isFavorite: Boolean(getRandomInteger()),

@@ -6,11 +6,13 @@ import Sort from "./view/sort";
 import EditingForm from "./view/editing-form";
 import Point from "./view/point";
 import {generatePoint} from "./mock/point";
-import {compare} from "./utils";
+import {compare} from "./utils/utils";
 import {POINT_COUNT} from "./mock/data";
 import PointsList from "./view/points-list";
 import NoPoints from "./view/no-points";
 import {render, RenderPosition, replaceChild} from "./utils/render";
+import PointPresenter from "./presenter/point-presenter";
+import PointListPresenter from "./presenter/point-list-presenter";
 
 const points = Array(POINT_COUNT).fill().map(generatePoint);
 points.sort((sort1, sort2) => compare(sort1.startTime, sort2.startTime));
@@ -25,22 +27,22 @@ const renderPoint = (pointsListElement, point) => {
   render(pointsListElement, pointComponent, RenderPosition.BEFOREEND);
 
   const replacePointToForm = () => {
-    replaceChild(editFormComponent, pointComponent);
+
   };
 
   const replaceFormToCard = () => {
-    replaceChild(pointComponent, editFormComponent);
+
   };
 
 
   const handleOpenForm = () => {
-    replacePointToForm();
+    replaceChild(editFormComponent, pointComponent);
     editFormComponent.setCloseFormClickHandler(handleCloseForm);
     document.addEventListener(`keydown`, onEscKeyDown);
   };
 
   const handleCloseForm = () => {
-    replaceFormToCard();
+    replaceChild(pointComponent, editFormComponent);
     pointComponent.setClickOpenFormHandler(handleOpenForm);
     document.removeEventListener(`keydown`, onEscKeyDown);
   };
@@ -72,6 +74,8 @@ render(controlsMainElement, new Menu(), RenderPosition.AFTERBEGIN);
 render(controlsMainElement, new Filters(), RenderPosition.BEFOREEND);
 render(pointsListComponent, new Sort(points), RenderPosition.BEFOREEND);
 
-renderPoints(pointsListComponent, points);
+ //renderPoints(pointsListComponent, points);
 
 
+const pointListPresenter = new PointListPresenter(pageBodyContainer);
+pointListPresenter.init(points);

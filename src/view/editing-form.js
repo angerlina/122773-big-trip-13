@@ -1,4 +1,4 @@
-import {formatToDateTimeYear} from "../utils";
+import {formatToDateTimeYear} from "../utils/utils";
 import {ALL_OFFERS, POINT_TYPES, TOWNS} from "../mock/data";
 import AbstractView from "./AbstractView";
 
