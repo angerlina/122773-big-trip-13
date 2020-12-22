@@ -1,5 +1,6 @@
-import {createElement, formatToDateTimeYear} from "../utils";
+import {formatToDateTimeYear} from "../utils";
 import {ALL_OFFERS, POINT_TYPES, TOWNS} from "../mock/data";
+import AbstractView from "./AbstractView";
 
 const getTownsOptionsList = () => {
   const result = `<datalist id="destination-list-1">
@@ -100,28 +101,38 @@ const createEditingPointFormTemplate = (point) => {
               </form>`;
 };
 
-export default class EditingForm {
+export default class EditingForm extends AbstractView {
 
   constructor(point = {type: `Flight`, destination: {}}) {
+    super();
     this._point = point;
-    this._element = null;
+    this._closeFormClickHandler = this._closeFormClickHandler.bind(this);
+    this._submitFormHandler = this._submitFormHandler.bind(this);
+    this._rollupButtonElement = this.getElement().querySelector(`.event__rollup-btn`);
   }
 
+  _closeFormClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeFormClickHandler();
+    this._rollupButtonElement.removeEventListener(`click`, this._closeFormClickHandler);
+  }
+
+  setCloseFormClickHandler(callback) {
+    this._callback.closeFormClickHandler = callback;
+    this._rollupButtonElement.addEventListener(`click`, this._closeFormClickHandler);
+  }
+
+  _submitFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.submitFormHandler();
+  }
+
+  setSubmitFormHandler(callback) {
+    this._callback.submitFormHandler = callback;
+    this.getElement().addEventListener(`submit`, this._submitFormHandler);
+  }
 
   getTemplate() {
     return createEditingPointFormTemplate(this._point);
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
 }

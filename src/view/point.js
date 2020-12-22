@@ -1,4 +1,5 @@
-import {getDuration, formatToMonthDay, getStartEndDateTime, createElement} from "../utils";
+import {getDuration, formatToMonthDay, getStartEndDateTime} from "../utils";
+import AbstractView from "./AbstractView";
 
 const getOfferTemplate = (offer) => {
   return `<li class="event__offer">
@@ -48,27 +49,26 @@ export const createPointTemplate = (point) => {
               </div>`;
 };
 
-export default class Point {
+export default class Point extends AbstractView {
   constructor(point) {
-    this._task = point;
-    this._element = null;
+    super();
+    this._point = point;
+    this._clickOpenFormHandler = this._clickOpenFormHandler.bind(this);
+    this._rollupButtonElement = this.getElement().querySelector(`.event__rollup-btn`);
   }
 
+  _clickOpenFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.openFormClick();
+    this._rollupButtonElement.removeEventListener(`click`, this._clickOpenFormHandler);
+  }
+
+  setClickOpenFormHandler(callback) {
+    this._callback.openFormClick = callback;
+    this._rollupButtonElement.addEventListener(`click`, this._clickOpenFormHandler);
+  }
 
   getTemplate() {
-    return createPointTemplate(this._task);
+    return createPointTemplate(this._point);
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
 }
