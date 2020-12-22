@@ -17,6 +17,8 @@ export default class PointPresenter {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleCloseForm = this._handleCloseForm.bind(this);
     this._handleOpenForm = this._handleOpenForm.bind(this);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._handleToggleFavorite = this._handleToggleFavorite.bind(this);
     this._mode = Mode.DEFAULT;
   }
 
@@ -29,6 +31,7 @@ export default class PointPresenter {
     this._pointEditComponent.setSubmitFormHandler(this._handleFormSubmit);
     this._pointEditComponent.setCloseFormClickHandler(this._handleCloseForm);
     this._pointComponent.setClickOpenFormHandler(this._handleOpenForm);
+    this._pointComponent.setHandleToggleFavorite(this._handleToggleFavorite);
 
     if (!prevPointComponent || !prevPointEditComponent) {
       render(this._pointListComponent, this._pointComponent, RenderPosition.BEFOREEND);
@@ -36,11 +39,11 @@ export default class PointPresenter {
     }
 
     if (this._mode === Mode.DEFAULT) {
-      replaceChild(this._pointComponent, prevPointComponent);
+      replaceChild(prevPointComponent, this._pointComponent);
     }
 
     if (this._mode === Mode.EDITING) {
-      replaceChild(this._pointEditComponent, prevPointEditComponent);
+      replaceChild(prevPointEditComponent, this._pointEditComponent);
     }
 
     remove(prevPointComponent);
@@ -59,8 +62,13 @@ export default class PointPresenter {
     remove(this._pointEditComponent);
   }
 
+  _handleToggleFavorite(point) {
+    this._changeData(
+        Object.assign({}, point, {isFavorite: !point.isFavorite})
+    );
+  }
   _handleOpenForm() {
-    replaceChild(this._pointEditComponent, this._pointComponent);
+    replaceChild(this._pointComponent, this._pointEditComponent);
     this._pointEditComponent.setCloseFormClickHandler(this._handleCloseForm);
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._changeMode();
@@ -68,8 +76,8 @@ export default class PointPresenter {
   }
 
   _handleCloseForm() {
-    replaceChild(this._pointComponent, this._pointEditComponent);
-    this._pointComponent.setClickOpenFormHandler(this._handleOpenForm());
+    replaceChild(this._pointEditComponent, this._pointComponent);
+    this._pointComponent.setClickOpenFormHandler(this._handleOpenForm);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.DEFAULT;
   }

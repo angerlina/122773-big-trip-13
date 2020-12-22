@@ -16,7 +16,6 @@ export default class PointListPresenter {
   }
 
   _handlePointChange(updatedPoint) {
-    debugger;
     this._points = updateItem(this._points, updatedPoint);
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
