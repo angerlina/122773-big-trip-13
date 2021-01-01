@@ -1,4 +1,4 @@
-import {formatToDateTimeYear} from "../utils";
+import {formatToDateTimeYear} from "../utils/utils";
 import {ALL_OFFERS, POINT_TYPES, TOWNS} from "../mock/data";
 import AbstractView from "./AbstractView";
 
@@ -124,7 +124,7 @@ export default class EditingForm extends AbstractView {
 
   _submitFormHandler(evt) {
     evt.preventDefault();
-    this._callback.submitFormHandler();
+    this._callback.submitFormHandler(this._point);
   }
 
   setSubmitFormHandler(callback) {

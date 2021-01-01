@@ -15,12 +15,12 @@ export const RenderPosition = {
 };
 
 export const replaceChild = (oldChild, newChild) => {
-  const newChildElement = getElement(newChild);
-  const parent = newChildElement.parentElement;
+  const oldChildElement = getElement(oldChild);
+  const parent = oldChildElement.parentElement;
   if (!parent || !oldChild || !newChild) {
     throw Error(`Нельзя заменить несуществующие компоненты!`);
   }
-  getElement(parent).replaceChild(getElement(oldChild), newChildElement);
+  getElement(parent).replaceChild(getElement(newChild), oldChildElement);
 };
 
 export const render = (container, element, place) => {
@@ -32,4 +32,13 @@ export const render = (container, element, place) => {
       getElement(container).append(getElement(element));
       break;
   }
+};
+
+
+export const remove = (component) => {
+  if (!(component instanceof AbstractView)) {
+    throw new Error(`Can remove only components`);
+  }
+  component.getElement().remove();
+  component.removeElement();
 };

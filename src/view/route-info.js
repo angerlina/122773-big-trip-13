@@ -1,4 +1,4 @@
-import {formatToMonthDay} from "../utils";
+import {formatToMonthDay} from "../utils/utils";
 import dayjs from "dayjs";
 import AbstractView from "./AbstractView";
 

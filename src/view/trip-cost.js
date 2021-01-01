@@ -1,4 +1,4 @@
-import {getTripCost} from "../utils";
+import {getTripCost} from "../utils/utils";
 import AbstractView from "./AbstractView";
 
 export const createTripCostTemplate = (points) => {

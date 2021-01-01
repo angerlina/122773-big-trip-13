@@ -1,6 +1,20 @@
 import dayjs from "dayjs";
-import {MAX_DATE_GAP} from "./mock/data";
+import {MAX_DATE_GAP} from "../mock/data";
 
+
+export const updateItem = (items, itemToUpdate) => {
+  const index = items.findIndex((item) => item.id === itemToUpdate.id);
+
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    itemToUpdate,
+    ...items.slice(index + 1)
+  ];
+};
 
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
