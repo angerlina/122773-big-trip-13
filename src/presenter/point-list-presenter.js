@@ -12,10 +12,15 @@ export default class PointListPresenter {
     this._pointPresenters = {};
     this._pointListComponent = new PointsList();
     this._noPointsComponent = new NoPoints();
+    this._sortComponent = new Sort();
     this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSort = this._handleSort.bind(this);
   }
 
+  _handleSort(sortType) {
+    console.log(sortType);
+  }
   _handlePointChange(updatedPoint) {
     this._points = updateItem(this._points, updatedPoint);
     this._pointPresenters[updatedPoint.id].init(updatedPoint);
@@ -30,8 +35,15 @@ export default class PointListPresenter {
   init(points) {
     this._points = points.slice();
     this._initialPoints = points.slice();
-    render(this._pointListContainer, new Sort(points), RenderPosition.AFTERBEGIN);
+    this._renderSort();
     this._renderPointsList(points);
+  }
+
+  _renderSort() {
+    if (this._points && this._points.length) {
+      render(this._pointListContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+      this._sortComponent.setSortTypeChangeHandler(this._handleSort);
+    }
   }
 
   _renderNoPoints() {
