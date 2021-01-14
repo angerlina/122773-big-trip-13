@@ -3,6 +3,7 @@ import NoPoints from "../view/no-points";
 import {render, RenderPosition} from "../utils/render";
 import PointPresenter from "./point-presenter";
 import {updateItem} from "../utils/utils";
+import Sort from "../view/sort";
 
 export default class PointListPresenter {
 
@@ -29,12 +30,12 @@ export default class PointListPresenter {
   init(points) {
     this._points = points.slice();
     this._initialPoints = points.slice();
-    render(this._pointListContainer, this._pointListComponent, RenderPosition.AFTERBEGIN);
+    render(this._pointListContainer, new Sort(points), RenderPosition.AFTERBEGIN);
     this._renderPointsList(points);
   }
 
   _renderNoPoints() {
-    render(this._pointListComponent, this._noPointsComponent, RenderPosition.AFTERBEGIN);
+    render(this._pointListContainer, this._noPointsComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderPoint(point) {
@@ -45,6 +46,7 @@ export default class PointListPresenter {
 
   _renderPointsList() {
     if (this._points && this._points.length) {
+      render(this._pointListContainer, this._pointListComponent, RenderPosition.BEFOREEND);
       this._points.forEach((point) => this._renderPoint(point));
       return;
     }
