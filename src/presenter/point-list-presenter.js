@@ -8,7 +8,7 @@ export default class PointListPresenter {
 
   constructor(pointListContainer) {
     this._pointListContainer = pointListContainer;
-    this._pointPresenter = {};
+    this._pointPresenters = {};
     this._pointListComponent = new PointsList();
     this._noPointsComponent = new NoPoints();
     this._handlePointChange = this._handlePointChange.bind(this);
@@ -17,18 +17,18 @@ export default class PointListPresenter {
 
   _handlePointChange(updatedPoint) {
     this._points = updateItem(this._points, updatedPoint);
-    this._pointPresenter[updatedPoint.id].init(updatedPoint);
+    this._pointPresenters[updatedPoint.id].init(updatedPoint);
   }
 
   _handleModeChange() {
     Object
-      .values(this._pointPresenter)
+      .values(this._pointPresenters)
       .forEach((presenter) => presenter.resetView());
   }
 
   init(points) {
     this._points = points.slice();
-    this.initialPoints = points.slice();
+    this._initialPoints = points.slice();
     render(this._pointListContainer, this._pointListComponent, RenderPosition.AFTERBEGIN);
     this._renderPointsList(points);
   }
@@ -40,7 +40,7 @@ export default class PointListPresenter {
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._pointListComponent, this._handlePointChange, this._handleModeChange);
     pointPresenter.init(point);
-    this._pointPresenter[point.id] = pointPresenter;
+    this._pointPresenters[point.id] = pointPresenter;
   }
 
   _renderPointsList() {
