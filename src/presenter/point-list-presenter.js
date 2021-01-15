@@ -1,6 +1,6 @@
 import PointsList from "../view/points-list";
 import NoPoints from "../view/no-points";
-import {render, RenderPosition} from "../utils/render";
+import {render, RenderPosition, replaceChild} from "../utils/render";
 import PointPresenter from "./point-presenter";
 import {compare, updateItem} from "../utils/utils";
 import Sort from "../view/sort";
@@ -15,7 +15,6 @@ export default class PointListPresenter {
     this._pointListComponent = new PointsList();
     this._noPointsComponent = new NoPoints();
     this._currentSortType = SortType.DEFAULT;
-    this._sortComponent = new Sort();
     this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSort = this._handleSort.bind(this);
@@ -33,6 +32,7 @@ export default class PointListPresenter {
     }
     this._clearPointsList();
     this._renderPointsList();
+    this._renderSort();
   }
 
   _handlePointChange(updatedPoint) {
@@ -50,14 +50,19 @@ export default class PointListPresenter {
     this._points = points.slice();
     this._sortPoints(this._currentSortType);
     this._renderSort();
-
     this._renderPointsList(points);
-
   }
 
   _renderSort() {
     if (this._points && this._points.length) {
-      render(this._pointListContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+      if (!this._sortComponent) {
+        this._sortComponent = new Sort(this._currentSortType);
+        render(this._pointListContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+      } else {
+        const oldSort = this._sortComponent;
+        this._sortComponent = new Sort(this._currentSortType);
+        replaceChild(oldSort, this._sortComponent);
+      }
       this._sortComponent.setSortTypeChangeHandler(this._handleSort);
     }
   }
