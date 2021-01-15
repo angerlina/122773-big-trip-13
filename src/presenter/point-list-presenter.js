@@ -14,18 +14,14 @@ export default class PointListPresenter {
     this._pointPresenters = {};
     this._pointListComponent = new PointsList();
     this._noPointsComponent = new NoPoints();
-    this._currentSortType = SortType.DEFAULT;
+    this._currentSortType = SortType.DAY;
     this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSort = this._handleSort.bind(this);
   }
 
   _handleSort(sortType) {
-    if (this._currentSortType === SortType.DEFAULT && sortType === SortType.DAY) {
-      this._sortPoints(SortType.DAY);
-    } else if (this._currentSortType === SortType.DAY && sortType === SortType.DAY) {
-      this._sortPoints(SortType.DEFAULT);
-    } else if (this._currentSortType !== sortType) {
+    if (this._currentSortType !== sortType) {
       this._sortPoints(sortType);
     } else {
       return;
