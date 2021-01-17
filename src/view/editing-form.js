@@ -35,7 +35,7 @@ const getOffersTemplate = (data) => {
     const checked = offers && offers.some((item) => item.name === offer.name) ? `checked` : ``;
     const {name, cost} = offer;
     return `<div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${name}-1" type="checkbox" name="event-offer-${name}" ${checked}>
+                        <input data-offer-name="${name}" class="event__offer-checkbox  visually-hidden" id="event-offer-${name}-1" type="checkbox" name="event-offer-${name}" ${checked}>
                         <label class="event__offer-label" for="event-offer-${name}-1">
                           <span class="event__offer-title">${name}</span>
                           &plus;&euro;&nbsp;
@@ -52,7 +52,7 @@ const getOffersTemplate = (data) => {
                                 </section>` : ``;
 };
 
-const getDesctiptionTemplate = (description) => {
+const getDescriptionTemplate = (description) => {
   return ` <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${description || ``}</p>`;
 };
@@ -103,7 +103,7 @@ const createEditingPointFormTemplate = (data) => {
                 <section class="event__details">
             ${getOffersTemplate(data)}
                   <section class="event__section  event__section--destination">
-                    ${description ? getDesctiptionTemplate(description) : ``}
+                    ${description ? getDescriptionTemplate(description) : ``}
                     ${photos && photos.length ? getPhotosTemplate(data.destination.photos) : ``}
                   </section>
                 </section>
@@ -118,14 +118,12 @@ export default class EditingForm extends SmartView {
     this._closeFormClickHandler = this._closeFormClickHandler.bind(this);
     this._submitFormHandler = this._submitFormHandler.bind(this);
     this._rollupButtonElement = this.getElement().querySelector(`.event__rollup-btn`);
-
     this._changeEventTypeHandler = this._changeEventTypeHandler.bind(this);
     this._changeDestinationHandler = this._changeDestinationHandler.bind(this);
-
+    this._inputPriceHandler = this._inputPriceHandler.bind(this);
+    this._changeOffersHandler = this._changeOffersHandler.bind(this);
     this._setInnerHandlers();
-
   }
-
 
   static parsePointToData(point) {
     return Object.assign(
@@ -143,6 +141,25 @@ export default class EditingForm extends SmartView {
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-group`).addEventListener(`change`, this._changeEventTypeHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._changeDestinationHandler);
+    this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._inputPriceHandler);
+    if (this._data.offersForType && this._data.offersForType.length) {
+      this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._changeOffersHandler);
+    }
+  }
+
+  _changeOffersHandler(evt) {
+    const {dataset: {offerName}, checked} = evt.target;
+    let updatedOffers = this._data.offers.slice();
+    if (checked) {
+      updatedOffers.push(this._data.offersForType.find(
+          (offer) => offer.name.toLowerCase() === offerName.toLowerCase())
+      );
+    } else {
+      updatedOffers = updatedOffers.filter((offer) => offer.name.toLowerCase() !== offerName.toLowerCase());
+    }
+    this.updateData({
+      offers: updatedOffers,
+    });
   }
 
   _changeEventTypeHandler(evt) {
@@ -163,6 +180,10 @@ export default class EditingForm extends SmartView {
     } else {
       this.updateData({destination: {}});
     }
+  }
+
+  _inputPriceHandler(evt) {
+    this.updateData({price: evt.target.value}, true);
   }
 
   _closeFormClickHandler(evt) {
