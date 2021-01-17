@@ -117,7 +117,6 @@ export default class EditingForm extends SmartView {
     this._data = EditingForm.parsePointToData(point);
     this._closeFormClickHandler = this._closeFormClickHandler.bind(this);
     this._submitFormHandler = this._submitFormHandler.bind(this);
-    this._rollupButtonElement = this.getElement().querySelector(`.event__rollup-btn`);
     this._changeEventTypeHandler = this._changeEventTypeHandler.bind(this);
     this._changeDestinationHandler = this._changeDestinationHandler.bind(this);
     this._inputPriceHandler = this._inputPriceHandler.bind(this);
@@ -136,6 +135,8 @@ export default class EditingForm extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this.setSubmitFormHandler(this._callback.submitFormHandler);
+    this.setCloseFormClickHandler(this._callback.closeFormClickHandler);
   }
 
   _setInnerHandlers() {
@@ -148,6 +149,7 @@ export default class EditingForm extends SmartView {
   }
 
   _changeOffersHandler(evt) {
+    evt.preventDefault();
     const {dataset: {offerName}, checked} = evt.target;
     let updatedOffers = this._data.offers.slice();
     if (checked) {
@@ -189,12 +191,12 @@ export default class EditingForm extends SmartView {
   _closeFormClickHandler(evt) {
     evt.preventDefault();
     this._callback.closeFormClickHandler();
-    this._rollupButtonElement.removeEventListener(`click`, this._closeFormClickHandler);
+    this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._closeFormClickHandler);
   }
 
   setCloseFormClickHandler(callback) {
     this._callback.closeFormClickHandler = callback;
-    this._rollupButtonElement.addEventListener(`click`, this._closeFormClickHandler);
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeFormClickHandler);
   }
 
   _submitFormHandler(evt) {
