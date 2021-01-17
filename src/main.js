@@ -10,12 +10,12 @@ import PointListPresenter from "./presenter/point-list-presenter";
 const points = Array(POINT_COUNT).fill().map(generatePoint);
 const tripMainElement = document.querySelector(`.trip-main`);
 const controlsMainElement = document.querySelector(`.trip-main__trip-controls`);
-const pageBodyContainer = document.querySelector(`.trip-events`);
+const tripEventsContainer = document.querySelector(`.trip-events`);
 
 render(tripMainElement, new TripCost(points), RenderPosition.AFTERBEGIN);
 render(tripMainElement, new RouteInfo(points), RenderPosition.AFTERBEGIN);
 render(controlsMainElement, new Menu(), RenderPosition.AFTERBEGIN);
 render(controlsMainElement, new Filters(), RenderPosition.BEFOREEND);
 
-const pointListPresenter = new PointListPresenter(pageBodyContainer);
+const pointListPresenter = new PointListPresenter(tripEventsContainer);
 pointListPresenter.init(points);

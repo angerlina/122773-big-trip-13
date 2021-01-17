@@ -2,19 +2,19 @@ import PointsList from "../view/points-list";
 import NoPoints from "../view/no-points";
 import {render, RenderPosition, replaceChild} from "../utils/render";
 import PointPresenter from "./point-presenter";
-import {compare, updateItem} from "../utils/utils";
 import Sort from "../view/sort";
 import {SortType} from "../const";
-import dayjs from "dayjs";
+import {sortByDuration, sortByPrice, sortByStartTime} from "../utils/sort";
+import {updateItem} from "../utils/utils";
 
 export default class PointListPresenter {
 
-  constructor(pointListContainer) {
-    this._pointListContainer = pointListContainer;
+  constructor(tripEventsContainer) {
+    this._tripEventsContainer = tripEventsContainer;
     this._pointPresenters = {};
     this._pointListComponent = new PointsList();
     this._noPointsComponent = new NoPoints();
-    this._currentSortType = SortType.DAY;
+    this._currentSortType = SortType.START_TIME;
     this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSort = this._handleSort.bind(this);
@@ -53,18 +53,18 @@ export default class PointListPresenter {
     if (this._points && this._points.length) {
       if (!this._sortComponent) {
         this._sortComponent = new Sort(this._currentSortType);
-        render(this._pointListContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+        render(this._tripEventsContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
       } else {
         const oldSort = this._sortComponent;
         this._sortComponent = new Sort(this._currentSortType);
         replaceChild(oldSort, this._sortComponent);
       }
-      this._sortComponent.setSortTypeChangeHandler(this._handleSort);
+      this._sortComponent.setSortTypeClickHandler(this._handleSort);
     }
   }
 
   _renderNoPoints() {
-    render(this._pointListContainer, this._noPointsComponent, RenderPosition.AFTERBEGIN);
+    render(this._tripEventsContainer, this._noPointsComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderPoint(point) {
@@ -75,7 +75,7 @@ export default class PointListPresenter {
 
   _renderPointsList() {
     if (this._points && this._points.length) {
-      render(this._pointListContainer, this._pointListComponent, RenderPosition.BEFOREEND);
+      render(this._tripEventsContainer, this._pointListComponent, RenderPosition.BEFOREEND);
       this._points.forEach((point) => this._renderPoint(point));
       return;
     }
@@ -91,20 +91,11 @@ export default class PointListPresenter {
 
   _sortPoints(sortType) {
     switch (sortType) {
-      case SortType.DEFAULT:
-        this._points.sort((sort1, sort2) => compare(sort1.startTime, sort2.startTime));
+      case SortType.START_TIME: sortByStartTime(this._points);
         break;
-      case SortType.DAY:
-        this._points.sort((sort1, sort2) => compare(sort2.startTime, sort1.startTime));
+      case SortType.PRICE: sortByPrice(this._points);
         break;
-      case SortType.PRICE:
-        this._points.sort((sort1, sort2) => compare(sort2.price, sort1.price));
-        break;
-      case SortType.TIME:
-        this._points.sort((sort1, sort2) => compare(
-            dayjs(sort1.startTime).diff(sort1.endTime, `second`),
-            dayjs(sort2.startTime).diff(sort2.endTime, `second`))
-        );
+      case SortType.DURATION: sortByDuration(this._points);
         break;
     }
     this._currentSortType = sortType;
