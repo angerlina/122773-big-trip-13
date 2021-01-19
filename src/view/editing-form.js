@@ -124,15 +124,6 @@ export default class EditingForm extends SmartView {
     this._setInnerHandlers();
   }
 
-  static parsePointToData(point) {
-    return Object.assign(
-        {},
-        point,
-        {
-          offersForType: getOffersForType(point.type)}
-    );
-  }
-
   restoreHandlers() {
     this._setInnerHandlers();
     this.setSubmitFormHandler(this._callback.submitFormHandler);
@@ -212,4 +203,26 @@ export default class EditingForm extends SmartView {
   getTemplate() {
     return createEditingPointFormTemplate(this._data);
   }
+
+  reset(point) {
+    this.updateData(
+        EditingForm.parseDataToPoint(point)
+    );
+  }
+
+  static parsePointToData(point) {
+    return Object.assign(
+        {},
+        point,
+        {
+          offersForType: getOffersForType(point.type)}
+    );
+  }
+
+  static parseDataToPoint(data) {
+    data = Object.assign({}, data);
+    delete data.offersForType;
+    return data;
+  }
+
 }
