@@ -3,6 +3,10 @@ import {POINT_TYPES, TOWNS} from "../mock/data";
 import SmartView from "./smart-view";
 import {getDestinationInfo, getOffersForType} from "../mock/point";
 
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import dayjs from "dayjs";
+import {getDatePicker} from "../utils/datepicker";
+
 const getPhotosTemplate = (photos) => {
   return `<div class="event__photos-container">
                       <div class="event__photos-tape">
@@ -115,6 +119,8 @@ export default class EditingForm extends SmartView {
   constructor(point = {type: `Flight`, destination: {}}) {
     super();
     this._data = EditingForm.parsePointToData(point);
+    this._startTimeDatepicker = null;
+    this._endTimeDatepicker = null;
     this._closeFormClickHandler = this._closeFormClickHandler.bind(this);
     this._submitFormHandler = this._submitFormHandler.bind(this);
     this._changeEventTypeHandler = this._changeEventTypeHandler.bind(this);
@@ -122,13 +128,51 @@ export default class EditingForm extends SmartView {
     this._inputPriceHandler = this._inputPriceHandler.bind(this);
     this._changeOffersHandler = this._changeOffersHandler.bind(this);
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   restoreHandlers() {
     this._setInnerHandlers();
     this.setSubmitFormHandler(this._callback.submitFormHandler);
     this.setCloseFormClickHandler(this._callback.closeFormClickHandler);
+    this._setDatepicker();
   }
+
+
+  _setDatepicker() {
+    if (this._startTimeDatepicker) {
+      this._startTimeDatepicker.destroy();
+      this._startTimeDatepicker = null;
+    }
+
+    this._startTimeDatepicker = getDatePicker(
+        this.getElement().querySelector(`[name='event-start-time']`),
+        this._data.startTime,
+        this._startTimeChangeHandler);
+
+    if (this._endTimeDatepicker) {
+      this._endTimeDatepicker.destroy();
+      this._endTimeDatepicker = null;
+    }
+
+    this._endTimeDatepicker = getDatePicker(
+        this.getElement().querySelector(`[name='event-end-time']`),
+        this._data.endTime,
+        this._endTimeChangeHandler);
+  }
+
+  _startTimeChangeHandler([userDate]) {
+    this.updateData({
+      startTime: dayjs(userDate),
+    });
+  }
+
+  _endTimeChangeHandler([userDate]) {
+    this.updateData({
+      endTime: dayjs(userDate),
+    });
+  }
+
 
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-group`).addEventListener(`change`, this._changeEventTypeHandler);
