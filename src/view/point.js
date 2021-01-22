@@ -18,7 +18,7 @@ export const createPointTemplate = (point) => {
   const duration = getDuration(point.startTime, point.endTime);
   const monthDay = formatToMonthDay(point.startTime);
   const startEndDateTimes = getStartEndDateTime(point.startTime, point.endTime).split(`-`);
-  return `<div class="event">
+  return `<li class="trip-events__item"><div class="event">
                 <time class="event__date" datetime="2020-01-19">${monthDay}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${point.type.toLowerCase()}.png" alt="Event type icon">
@@ -46,7 +46,7 @@ export const createPointTemplate = (point) => {
                 <button class="event__rollup-btn" type="button">
                   <span class="visually-hidden">Open event</span>
                 </button>
-              </div>`;
+              </div></li>`;
 };
 
 export default class Point extends AbstractView {

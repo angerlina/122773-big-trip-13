@@ -24,31 +24,38 @@ export default class PointPresenter {
 
   init(point) {
     this._point = point;
+    this.renderPointComponent();
+    this.renderEditComponent();
+  }
+
+  renderPointComponent() {
     const prevPointComponent = this._pointComponent;
-    const prevPointEditComponent = this._pointEditComponent;
     this._pointComponent = new Point(this._point);
-    this._pointEditComponent = new EditingForm(this._point);
-    this._pointEditComponent.setSubmitFormHandler(this._handleFormSubmit);
-    this._pointEditComponent.setCloseFormClickHandler(this._handleCloseForm);
     this._pointComponent.setClickOpenFormHandler(this._handleOpenForm);
     this._pointComponent.setHandleToggleFavorite(this._handleToggleFavorite);
-
-    if (!prevPointComponent || !prevPointEditComponent) {
+    if (!prevPointComponent) {
       render(this._pointListComponent, this._pointComponent, RenderPosition.BEFOREEND);
       return;
     }
-
     if (this._mode === Mode.DEFAULT) {
       replaceChild(prevPointComponent, this._pointComponent);
     }
+    remove(prevPointComponent);
+  }
 
+  renderEditComponent() {
+    const prevPointEditComponent = this._pointEditComponent;
+    this._pointEditComponent = new EditingForm(this._point);
+    this._pointEditComponent.setSubmitFormHandler(this._handleFormSubmit);
+    this._pointEditComponent.setCloseFormClickHandler(this._handleCloseForm);
+    if (!prevPointEditComponent) {
+      render(this._pointListComponent, this._pointComponent, RenderPosition.BEFOREEND);
+      return;
+    }
     if (this._mode === Mode.EDITING) {
       replaceChild(prevPointEditComponent, this._pointEditComponent);
     }
-
-    remove(prevPointComponent);
     remove(prevPointEditComponent);
-
   }
 
   resetView() {
@@ -67,6 +74,7 @@ export default class PointPresenter {
         Object.assign({}, point, {isFavorite: !point.isFavorite})
     );
   }
+
   _handleOpenForm() {
     replaceChild(this._pointComponent, this._pointEditComponent);
     this._pointEditComponent.setCloseFormClickHandler(this._handleCloseForm);

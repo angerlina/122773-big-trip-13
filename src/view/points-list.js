@@ -1,9 +1,7 @@
 import AbstractView from "./AbstractView";
 
 export const createPointsListTemplate = () => {
-  return `<section class="trip-events">
-            <h2 class="visually-hidden">Trip events</h2>
-          </section>`;
+  return `<ul class="trip-events__list"></ul>`;
 };
 
 export default class PointsList extends AbstractView {
