@@ -1,5 +1,5 @@
 import {getTripCost} from "../utils/utils";
-import AbstractView from "./AbstractView";
+import AbstractView from "./abstract-view";
 
 export const createTripCostTemplate = (points) => {
   const cost = getTripCost(points);

@@ -1,5 +1,5 @@
 import {getDuration, formatToMonthDay, getStartEndDateTime} from "../utils/utils";
-import AbstractView from "./AbstractView";
+import AbstractView from "./abstract-view";
 
 const getOfferTemplate = (offer) => {
   return `<li class="event__offer">

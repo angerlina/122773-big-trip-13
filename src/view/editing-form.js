@@ -127,6 +127,8 @@ export default class EditingForm extends SmartView {
     this._changeDestinationHandler = this._changeDestinationHandler.bind(this);
     this._inputPriceHandler = this._inputPriceHandler.bind(this);
     this._changeOffersHandler = this._changeOffersHandler.bind(this);
+    this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
+    this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
   }

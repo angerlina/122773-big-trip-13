@@ -1,6 +1,7 @@
 import EditingForm from "../view/editing-form";
 import Point from "../view/point";
 import {remove, render, RenderPosition, replaceChild} from "../utils/render";
+import {UpdateType, UserAction} from "../const";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -71,7 +72,7 @@ export default class PointPresenter {
 
   _handleToggleFavorite(point) {
     this._changeData(
-        Object.assign({}, point, {isFavorite: !point.isFavorite})
+        UserAction.UPDATE_POINT, UpdateType.PATCH, Object.assign({}, point, {isFavorite: !point.isFavorite})
     );
   }
 
@@ -92,7 +93,7 @@ export default class PointPresenter {
   }
 
   _handleFormSubmit(point) {
-    this._changeData(point);
+    this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
     this._handleCloseForm();
   }
 

@@ -1,4 +1,4 @@
-import AbstractView from "./AbstractView";
+import AbstractView from "./abstract-view";
 import {SortType} from "../const";
 
 export const createSortTemplate = (sortType) => {
