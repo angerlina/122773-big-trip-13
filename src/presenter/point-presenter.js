@@ -84,6 +84,7 @@ export default class PointPresenter {
   }
 
   _handleCloseForm() {
+    this._pointEditComponent.reset(this._point);
     replaceChild(this._pointEditComponent, this._pointComponent);
     this._pointComponent.setClickOpenFormHandler(this._handleOpenForm);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
