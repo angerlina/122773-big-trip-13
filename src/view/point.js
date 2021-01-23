@@ -1,4 +1,4 @@
-import {getDuration, formatToMonthDay, getStartEndDateTime} from "../utils/utils";
+import {getFormattedDuration, formatToMonthDay, getStartEndDateTime} from "../utils/utils";
 import AbstractView from "./abstract-view";
 
 const getOfferTemplate = (offer) => {
@@ -15,7 +15,7 @@ const getOffersTemplate = (offers) => {
 };
 export const createPointTemplate = (point) => {
   const favoriteButtonClass = point.isFavorite ? `event__favorite-btn--active` : ``;
-  const duration = getDuration(point.startTime, point.endTime);
+  const duration = getFormattedDuration(point.startTime, point.endTime);
   const monthDay = formatToMonthDay(point.startTime);
   const startEndDateTimes = getStartEndDateTime(point.startTime, point.endTime).split(`-`);
   return `<li class="trip-events__item"><div class="event">

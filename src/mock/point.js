@@ -16,7 +16,7 @@ import {
 } from "./data";
 import dayjs from "dayjs";
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 export const getDestinationInfo = (town) => ({
   description: getRandomItemsFromArray(DESCRIPTION_MATERIAL.split(` `)).join(` `),
@@ -37,7 +37,7 @@ export const generatePoint = () => {
   point.offers = filteredOffers.length ? getRandomItemsFromArray(filteredOffers) : [];
   point.startTime = generateRandomDate();
   point.endTime = generateRandomDateAfter(point.startTime);
-  point.duration = dayjs(point.startTime).diff(point.endTime, `second`);
+  point.duration = dayjs(point.startTime).diff(point.endTime, `minute`);
   return point;
 };
 

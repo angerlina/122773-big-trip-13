@@ -25,3 +25,9 @@ const pointListPresenter = new PointListPresenter(tripEventsContainer, pointsMod
 pointListPresenter.init();
 const filterPresenter = new FilterPresenter(controlsMainElement, filtersModel, pointsModel);
 filterPresenter.init();
+
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  pointListPresenter.createPoint();
+});

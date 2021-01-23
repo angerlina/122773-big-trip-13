@@ -3,9 +3,10 @@ import NoPoints from "../view/no-points";
 import {remove, render, RenderPosition} from "../utils/render";
 import PointPresenter from "./point-presenter";
 import Sort from "../view/sort";
-import {SortType, UpdateType, UserAction} from "../const";
+import {FilterType, SortType, UpdateType, UserAction} from "../const";
 import {sortByDuration, sortByPrice, sortByStartTime} from "../utils/sort";
 import {filter} from "../utils/filter";
+import PointNewPresenter from "./point-new-presenter";
 
 export default class PointListPresenter {
 
@@ -23,11 +24,19 @@ export default class PointListPresenter {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._pointNewPresenter = new PointNewPresenter(this._pointListComponent, this._handleViewAction);
   }
 
 
   init() {
     this._renderPointsList();
+  }
+
+  createPoint() {
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._pointNewPresenter.init();
   }
 
 
@@ -45,13 +54,14 @@ export default class PointListPresenter {
     }
   }
 
-  _handleModelEvent(updateType, data) {
+  _handleModelEvent(updateType) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._pointPresenters[data.id].init(data);
+        this._clearPointsList({resetSortType: false});
+        this._renderPointsList();
         break;
       case UpdateType.MAJOR:
-        this._clearPointsList();
+        this._clearPointsList({resetSortType: true});
         this._renderPointsList();
         break;
     }
@@ -119,11 +129,14 @@ export default class PointListPresenter {
     this._renderNoPoints();
   }
 
-  _clearPointsList() {
+  _clearPointsList({resetSortType = false} = {}) {
     Object
       .values(this._pointPresenters)
       .forEach((presenter) => presenter.destroy());
     this._pointPresenters = {};
+    if (resetSortType) {
+      this._currentSortType = SortType.START_TIME;
+    }
     remove(this._noPointsComponent);
     remove(this._sortComponent);
   }

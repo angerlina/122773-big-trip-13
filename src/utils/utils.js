@@ -51,7 +51,7 @@ export const generateRandomDateAfter = (date) => {
   return randomizeHoursAndMinutes(dayjs(date).add(getRandomInteger(0, MAX_DATE_GAP), `day`)).toDate();
 };
 
-export const getDuration = (startDate, endDate) => {
+export const getFormattedDuration = (startDate, endDate) => {
   const differenceInMinutes = dayjs(endDate).diff(startDate, `minute`);
   const differenceInHours = dayjs(endDate).diff(startDate, `hour`);
   const differenceInDays = dayjs(endDate).diff(startDate, `day`);
@@ -63,6 +63,8 @@ export const getDuration = (startDate, endDate) => {
   return `${differenceInDays}D ${(differenceInHours - differenceInDays * 24) % 60}H ${differenceInMinutes % 60}M`;
 };
 
+export const getDuration = (startTime, endTime) => (dayjs(startTime).diff(endTime, `minute`));
+
 export const formatToMonthDay = (date) => {
   return dayjs(date).format(`MMM D`);
 };
@@ -72,7 +74,10 @@ export const formatToDateTime = (date) => {
 };
 
 export const formatToDateTimeYear = (date) => {
-  return dayjs(date).format(`DD/MM/YYYY HH:mm`);
+  if (!date) {
+    return ``;
+  }
+  return dayjs(date).format(`DD/MM/YY HH:mm`);
 };
 
 export const formatToTime = (date) => {
@@ -87,6 +92,7 @@ export const getStartEndDateTime = (startDateTime, endDateTime) => {
   }
   return (`${formatToDateTimeYear(startDateTime)}-${formatToDateTimeYear(endDateTime)}`);
 };
+
 
 export const compare = (first, second) => {
   if (first < second) {
