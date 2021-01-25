@@ -30,13 +30,18 @@ export const getTripCost = (points) => {
   let cost = 0;
   points.forEach((point) => {
     cost += Number(point.price);
-    point.offers.forEach((offer) => {
-      cost += Number(offer.cost);
-    });
+    cost += getPointCost(point);
   });
   return cost;
 };
 
+export const getPointCost = (point) => {
+  let cost = point.price;
+  point.offers.forEach((offer) => {
+    cost += Number(offer.cost);
+  });
+  return cost;
+};
 const randomizeHoursAndMinutes = (dayjsDate) => {
   return dayjsDate.add(getRandomInteger(0, 60), `hour`).add(getRandomInteger(0, 60), `minute`);
 };
@@ -63,7 +68,7 @@ export const getFormattedDuration = (startDate, endDate) => {
   return `${differenceInDays}D ${(differenceInHours - differenceInDays * 24) % 60}H ${differenceInMinutes % 60}M`;
 };
 
-export const getDuration = (startTime, endTime) => (dayjs(startTime).diff(endTime, `minute`));
+export const getDuration = (startTime, endTime) => (dayjs(endTime).diff(startTime, `minute`));
 
 export const formatToMonthDay = (date) => {
   return dayjs(date).format(`MMM D`);

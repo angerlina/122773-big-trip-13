@@ -13,6 +13,7 @@ export default class PointNewPresenter {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleCloseForm = this._handleCloseForm.bind(this);
   }
 
   init() {
@@ -23,6 +24,7 @@ export default class PointNewPresenter {
     this._pointEditComponent = new EditingForm();
     this._pointEditComponent.setSubmitFormHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeletePointClickHandler(this._handleDeleteClick);
+    this._pointEditComponent.setCloseFormClickHandler(this._handleCloseForm);
 
     render(this._pointListContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
@@ -47,6 +49,11 @@ export default class PointNewPresenter {
         Object.assign({id: generateId()}, point)
     );
     this.destroy();
+  }
+
+  _handleCloseForm() {
+    remove(this._pointEditComponent);
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   _handleDeleteClick() {

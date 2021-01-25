@@ -22,8 +22,6 @@ export default class PointListPresenter {
     this._handleSort = this._handleSort.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
 
     this._pointNewPresenter = new PointNewPresenter(this._pointListComponent, this._handleViewAction);
   }
@@ -31,12 +29,28 @@ export default class PointListPresenter {
 
   init() {
     this._renderPointsList();
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   createPoint() {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._pointNewPresenter.init();
+  }
+
+  show() {
+    if (this._pointListComponent) {
+      this._pointListComponent.show();
+      this._sortComponent.show();
+    }
+  }
+
+  hide() {
+    if (this._pointListComponent) {
+      this._pointListComponent.hide();
+      this._sortComponent.hide();
+    }
   }
 
 
@@ -141,5 +155,13 @@ export default class PointListPresenter {
     remove(this._sortComponent);
   }
 
+  destroy() {
+    this._clearPointsList({resetSortType: true});
+
+    remove(this._pointListComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
 
 }
