@@ -25,7 +25,7 @@ const pointListPresenter = new PointListPresenter(tripEventsContainer, pointsMod
 const filterPresenter = new FilterPresenter(controlsMainElement, filtersModel, pointsModel);
 const routeInfoPresenter = new RouteInfoPresenter(tripMainElement, pointsModel);
 const tripCostPresenter = new TripCostPresenter(tripMainElement, pointsModel);
-let statisticsComponent = new Statistics(pointsModel.getPoints());
+let statisticsComponent = new Statistics();
 
 statisticsComponent.hide();
 siteMenuComponent.setMenuItem(MenuItem.TABLE);
@@ -79,9 +79,9 @@ api.getOffers()
   .then(() => api.getPoints())
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
-    render(controlsMainElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
+    render(tripEventsContainer, statisticsComponent, RenderPosition.AFTERBEGIN);
     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   }
   ).catch(handleErrorInDataLoad);
 
-
+render(controlsMainElement, siteMenuComponent, RenderPosition.AFTERBEGIN);

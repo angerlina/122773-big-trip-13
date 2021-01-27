@@ -25,6 +25,14 @@ export default class Statistics extends SmartView {
   }
 
   setCharts(points) {
+    if (this._moneyCtx || this._typeCtx || this._timeCtx) {
+      this._moneyCtx.destroy();
+      this._moneyCtx = null;
+      this._typeCtx.destroy();
+      this._typeCtx = null;
+      this._timeCtx.destroy();
+      this._timeCtx = null;
+    }
     const moneyCtx = document.querySelector(`.statistics__chart--money`);
     const typeCtx = document.querySelector(`.statistics__chart--transport`);
     const timeCtx = document.querySelector(`.statistics__chart--time`);
@@ -36,10 +44,11 @@ export default class Statistics extends SmartView {
     typeCtx.height = BAR_HEIGHT * height;
     timeCtx.height = BAR_HEIGHT * height;
     this._labels = this._uniquePointsTypes.map((pointType) => pointType.toUpperCase());
-    this._renderMoneyCharts();
-    this._renderTypeCharts();
-    this._renderTimeCharts();
+    this._moneyCtx = this._renderMoneyCharts();
+    this._typeCtx = this._renderTypeCharts();
+    this._timeCtx = this._renderTimeCharts();
   }
+
 
   _renderMoneyCharts() {
     const moneyCtx = document.querySelector(`.statistics__chart--money`);
