@@ -184,13 +184,6 @@ export default class EditingForm extends SmartView {
     });
   }
 
-  _endTimeChangeHandler([userDate]) {
-    this.updateData({
-      endTime: dayjs(userDate).toDate(),
-      duration: getDuration(this._data.startTime, this._data.endTime)
-    });
-  }
-
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-group`).addEventListener(`change`, this._changeEventTypeHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._changeDestinationHandler);
@@ -200,56 +193,9 @@ export default class EditingForm extends SmartView {
     }
   }
 
-  _changeOffersHandler(evt) {
-    evt.preventDefault();
-    const {dataset: {offerName}, checked} = evt.target;
-    let updatedOffers = this._data.offers.slice();
-    if (checked) {
-      updatedOffers.push(this._data.offersForType.find(
-          (offer) => offer.name.toLowerCase() === offerName.toLowerCase())
-      );
-    } else {
-      updatedOffers = updatedOffers.filter((offer) => offer.name.toLowerCase() !== offerName.toLowerCase());
-    }
-    this.updateData({
-      offers: updatedOffers,
-    });
-  }
 
   _rerenderSaveButton() {
     replaceChild(this.getElement().querySelector(`.event__save-btn`), createElement(getSaveButtonTemplate(this._data)));
-  }
-
-  _changeEventTypeHandler(evt) {
-    const {value: type} = evt.target;
-    this.updateData({
-      type: type.toLowerCase(),
-      offers: [],
-      offersForType: getOffersForTypeForClient(type)
-    });
-  }
-
-  _changeDestinationHandler(evt) {
-    const {value: destination} = evt.target;
-    if (destination) {
-      this.updateData(
-          {destination: getDestinationInfo(destination)}
-      );
-    } else {
-      this.updateData({destination: {}});
-    }
-  }
-
-  _inputPriceHandler(evt) {
-    evt.preventDefault();
-    this.updateData({price: evt.target.value}, true);
-    this._rerenderSaveButton();
-  }
-
-  _closeFormClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.closeFormClickHandler();
-    this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._closeFormClickHandler);
   }
 
   setCloseFormClickHandler(callback) {
@@ -257,19 +203,10 @@ export default class EditingForm extends SmartView {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeFormClickHandler);
   }
 
-  _submitFormHandler(evt) {
-    evt.preventDefault();
-    this._callback.submitFormHandler(EditingForm.parseDataToPoint(this._data));
-  }
 
   setSubmitFormHandler(callback) {
     this._callback.submitFormHandler = callback;
     this.getElement().addEventListener(`submit`, this._submitFormHandler);
-  }
-
-  _deletePointClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.deletePointClickHandler(this._data);
   }
 
   setDeletePointClickHandler(callback) {
@@ -285,6 +222,73 @@ export default class EditingForm extends SmartView {
     this.updateData(
         EditingForm.parseDataToPoint(point)
     );
+  }
+
+  _submitFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.submitFormHandler(EditingForm.parseDataToPoint(this._data));
+  }
+
+  _deletePointClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deletePointClickHandler(this._data);
+  }
+
+  _endTimeChangeHandler([userDate]) {
+    this.updateData({
+      endTime: dayjs(userDate).toDate(),
+      duration: getDuration(this._data.startTime, this._data.endTime)
+    });
+  }
+
+  _inputPriceHandler(evt) {
+    evt.preventDefault();
+    this.updateData({price: evt.target.value}, true);
+    this._rerenderSaveButton();
+  }
+
+  _closeFormClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeFormClickHandler();
+    this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._closeFormClickHandler);
+  }
+
+
+  _changeDestinationHandler(evt) {
+    const {value: destination} = evt.target;
+    if (destination) {
+      this.updateData(
+          {destination: getDestinationInfo(destination)}
+      );
+    } else {
+      this.updateData({destination: {}});
+    }
+  }
+
+  _changeEventTypeHandler(evt) {
+    const {value: type} = evt.target;
+    this.updateData({
+      type: type.toLowerCase(),
+      offers: [],
+      offersForType: getOffersForTypeForClient(type)
+    });
+  }
+
+
+  _changeOffersHandler(evt) {
+    evt.preventDefault();
+    const {dataset: {offerName}, checked} = evt.target;
+    let updatedOffers = this._data.offers.slice();
+    if (checked) {
+      updatedOffers.push(this._data.offersForType.find(
+          (offer) => offer.name.toLowerCase() === offerName.toLowerCase())
+      );
+    } else {
+      updatedOffers = updatedOffers.filter((offer) => offer.name.toLowerCase() !== offerName.toLowerCase());
+    }
+    this.updateData({
+      offers: updatedOffers,
+    });
   }
 
   static parsePointToData(point) {

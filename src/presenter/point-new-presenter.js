@@ -55,22 +55,6 @@ export default class PointNewPresenter {
     this.destroy();
   }
 
-  _handleCloseForm() {
-    this.destroy(this._pointEditComponent);
-    document.removeEventListener(`keydown`, this._escKeyDownHandler);
-  }
-
-  _handleDeleteClick() {
-    this.destroy();
-  }
-
-  _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      this.destroy();
-    }
-  }
-
   setAborting() {
     const resetFormState = () => {
       this._pointEditComponent.updateData({
@@ -82,4 +66,22 @@ export default class PointNewPresenter {
 
     this._pointEditComponent.shake(resetFormState);
   }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      this.destroy();
+    }
+  }
+
+  _handleCloseForm() {
+    this.destroy(this._pointEditComponent);
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+  }
+
+  _handleDeleteClick() {
+    this.destroy();
+  }
+
+
 }
