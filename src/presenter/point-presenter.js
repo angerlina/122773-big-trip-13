@@ -8,6 +8,13 @@ const Mode = {
   EDITING: `EDITING`
 };
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
+
 export default class PointPresenter {
   constructor(pointListComponent, changeData, changeMode) {
     this._pointListComponent = pointListComponent;
@@ -56,9 +63,38 @@ export default class PointPresenter {
       return;
     }
     if (this._mode === Mode.EDITING) {
-      replaceChild(prevPointEditComponent, this._pointEditComponent);
+      replaceChild(prevPointEditComponent, this._pointComponent);
+      this._mode = Mode.DEFAULT;
     }
     remove(prevPointEditComponent);
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+    switch (state) {
+      case State.SAVING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ABORTING:
+        this._pointComponent.shake(resetFormState);
+        this._pointEditComponent.shake(resetFormState);
+        break;
+    }
   }
 
   resetView() {
@@ -102,7 +138,6 @@ export default class PointPresenter {
 
   _handleFormSubmit(point) {
     this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
-    this._handleCloseForm();
   }
 
   _onEscKeyDown(evt) {

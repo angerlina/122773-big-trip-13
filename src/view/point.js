@@ -1,4 +1,4 @@
-import {getFormattedDuration, formatToMonthDay, getStartEndDateTime} from "../utils/utils";
+import {getFormattedDuration, formatToMonthDay, getStartEndDateTime} from "../utils/point-utils";
 import AbstractView from "./abstract-view";
 
 const getOfferTemplate = (offer) => {

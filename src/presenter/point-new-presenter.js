@@ -1,7 +1,6 @@
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 import EditingForm from "../view/editing-form";
-import {generateId} from "../mock/point";
 
 export default class PointNewPresenter {
   constructor(pointListContainer, changeData) {
@@ -32,27 +31,32 @@ export default class PointNewPresenter {
   }
 
   destroy() {
+    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     if (this._pointEditComponent === null) {
       return;
     }
-
     remove(this._pointEditComponent);
     this._pointEditComponent = null;
-
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+  }
+
+  setSaving() {
+    this._pointEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
   }
 
   _handleFormSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MAJOR,
-        Object.assign({id: generateId()}, point)
-    );
+        point);
     this.destroy();
   }
 
   _handleCloseForm() {
-    remove(this._pointEditComponent);
+    this.destroy(this._pointEditComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
@@ -65,5 +69,17 @@ export default class PointNewPresenter {
       evt.preventDefault();
       this.destroy();
     }
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this._pointEditComponent.shake(resetFormState);
   }
 }

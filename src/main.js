@@ -27,13 +27,17 @@ let statisticsComponent = new Statistics(pointsModel.getPoints());
 statisticsComponent.hide();
 siteMenuComponent.setMenuItem(MenuItem.TABLE);
 
+const showPointsTable = () => {
+  pointListPresenter.show();
+  statisticsComponent.hide();
+  siteMenuComponent.setMenuItem(MenuItem.TABLE);
+};
+
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
       filtersModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-      pointListPresenter.show();
-      statisticsComponent.hide();
-      siteMenuComponent.setMenuItem(MenuItem.TABLE);
+      showPointsTable();
       break;
     case MenuItem.STATS:
       statisticsComponent.show();
@@ -46,6 +50,7 @@ const handleSiteMenuClick = (menuItem) => {
 
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
   evt.preventDefault();
+  showPointsTable();
   pointListPresenter.createPoint();
 });
 

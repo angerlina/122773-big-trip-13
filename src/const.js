@@ -1,3 +1,5 @@
+export const POINT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+
 export const SortType = {
   START_TIME: `start-time`,
   DURATION: `duration`,
@@ -28,3 +30,5 @@ export const MenuItem = {
   TABLE: `table`,
   STATS: `stats`
 };
+
+

@@ -65,12 +65,11 @@ export default class Points extends Observer {
           endTime: point.date_to !== null ? new Date(point.date_to) : point.date_to,
           isFavorite: point.is_favorite,
           price: point.base_price,
-          duration: dayjs(point.startTime).diff(point.endTime, `minute`),
+          duration: point.date_from && point.date_to ? dayjs(point.date_to).diff(point.date_from, `minute`) : 0,
           offers: point.offers.map((serverOffer) => Points.adaptOfferToClient(serverOffer)),
           destination: Points.adaptDestinationToClient(point.destination)
         }
     );
-
     delete point.base_price;
     delete adaptedPoint.is_favorite;
     delete adaptedPoint.date_from;
@@ -86,7 +85,7 @@ export default class Points extends Observer {
         {
           "date_from": point.startTime instanceof Date ? point.startTime.toISOString() : null,
           "date_to": point.endTime instanceof Date ? point.endTime.toISOString() : null,
-          "is_favorite": point.isFavorite,
+          "is_favorite": point.isFavorite || false,
           "base_price": Number(point.price),
           "offers": point.offers.map((offer) => Points.adaptOfferToServer(offer)),
           "destination": Points.adaptDestinationToServer(point.destination)
