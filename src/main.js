@@ -1,5 +1,3 @@
-import RouteInfo from "./view/route-info";
-import TripCost from "./view/trip-cost";
 import Menu from "./view/menu";
 import {render, RenderPosition} from "./utils/render";
 import PointListPresenter from "./presenter/point-list-presenter";
@@ -9,6 +7,8 @@ import FilterPresenter from "./presenter/filter-presenter";
 import {FilterType, MenuItem, UpdateType} from "./const";
 import Statistics from "./view/statistics";
 import Api from "./api";
+import RouteInfoPresenter from "./presenter/route-info-presenter";
+import TripCostPresenter from "./presenter/trip-cost-presenter";
 const AUTHORIZATION = `Basic ${Math.random().toString(36).substring(7)}`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 const api = new Api(END_POINT, AUTHORIZATION);
@@ -23,7 +23,10 @@ const pointsModel = new Points();
 const filtersModel = new Filter();
 const pointListPresenter = new PointListPresenter(tripEventsContainer, pointsModel, filtersModel, api);
 const filterPresenter = new FilterPresenter(controlsMainElement, filtersModel, pointsModel);
+const routeInfoPresenter = new RouteInfoPresenter(tripMainElement, pointsModel);
+const tripCostPresenter = new TripCostPresenter(tripMainElement, pointsModel);
 let statisticsComponent = new Statistics(pointsModel.getPoints());
+
 statisticsComponent.hide();
 siteMenuComponent.setMenuItem(MenuItem.TABLE);
 
@@ -56,8 +59,10 @@ document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (e
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
-pointListPresenter.init();
 
+pointListPresenter.init();
+tripCostPresenter.init();
+routeInfoPresenter.init();
 filterPresenter.init();
 
 const handleErrorInDataLoad = () => {
@@ -75,9 +80,6 @@ api.getOffers()
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
     render(controlsMainElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
-    render(tripMainElement, new TripCost(pointsModel.getPoints()), RenderPosition.AFTERBEGIN);
-    render(tripMainElement, new RouteInfo(pointsModel.getPoints()), RenderPosition.AFTERBEGIN);
-    render(tripEventsContainer, statisticsComponent, RenderPosition.AFTERBEGIN);
     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   }
   ).catch(handleErrorInDataLoad);

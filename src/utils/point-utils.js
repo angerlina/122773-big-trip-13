@@ -16,7 +16,6 @@ export const getDestinationInfo = (destinationName) => Points.adaptDestinationTo
 export const getTripCost = (points) => {
   let cost = 0;
   points.forEach((point) => {
-    cost += Number(point.price);
     cost += getPointCost(point);
   });
   return cost;
