@@ -7,23 +7,26 @@ import {FilterType, SortType, UpdateType, UserAction} from "../const";
 import {sortByDuration, sortByPrice, sortByStartTime} from "../utils/sort";
 import {filter} from "../utils/filter";
 import PointNewPresenter from "./point-new-presenter";
+import Loading from "../view/loading.js";
 
 export default class PointListPresenter {
 
-  constructor(tripEventsContainer, pointsModel, filterModel) {
+  constructor(tripEventsContainer, pointsModel, filterModel, api) {
     this._tripEventsContainer = tripEventsContainer;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._pointPresenters = {};
     this._pointListComponent = new PointsList();
     this._noPointsComponent = new NoPoints();
+    this._loadingComponent = new Loading();
     this._currentSortType = SortType.START_TIME;
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSort = this._handleSort.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
-
     this._pointNewPresenter = new PointNewPresenter(this._pointListComponent, this._handleViewAction);
+    this._isLoading = true;
+    this._api = api;
   }
 
 
@@ -57,7 +60,9 @@ export default class PointListPresenter {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.updatePoint(updateType, update);
+        this._api.updatePoint(update).then((response) => {
+          this._pointsModel.updatePoint(updateType, response);
+        });
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.addPoint(updateType, update);
@@ -76,6 +81,11 @@ export default class PointListPresenter {
         break;
       case UpdateType.MAJOR:
         this._clearPointsList({resetSortType: true});
+        this._renderPointsList();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderPointsList();
         break;
     }
@@ -122,6 +132,10 @@ export default class PointListPresenter {
     render(this._tripEventsContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
+  _renderLoading() {
+    render(this._tripEventsContainer, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
+
   _renderNoPoints() {
     render(this._tripEventsContainer, this._noPointsComponent, RenderPosition.AFTERBEGIN);
   }
@@ -133,6 +147,10 @@ export default class PointListPresenter {
   }
 
   _renderPointsList() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
     const points = this._getPoints();
     if (points && points.length) {
       render(this._tripEventsContainer, this._pointListComponent, RenderPosition.BEFOREEND);
@@ -153,6 +171,7 @@ export default class PointListPresenter {
     }
     remove(this._noPointsComponent);
     remove(this._sortComponent);
+    remove(this._loadingComponent);
   }
 
   destroy() {

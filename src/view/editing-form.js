@@ -1,7 +1,7 @@
 import {formatToDateTimeYear, getDuration} from "../utils/utils";
-import {POINT_TYPES, TOWNS} from "../mock/data";
+import {POINT_TYPES} from "../mock/data";
 import SmartView from "./smart-view";
-import {getDestinationInfo, getOffersForType} from "../mock/point";
+import {getDestinationInfo, getDestinationNames, getOffersForType, getOffersForTypeForClient} from "../mock/point";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 import dayjs from "dayjs";
@@ -13,9 +13,9 @@ const getPhotosTemplate = (photos) => {
 ${photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`)}
 </div></div>`;
 };
-const getTownsOptionsList = () => {
+const getTownsOptionsList = (destinationNames) => {
   const result = `<datalist id="destination-list-1">
-  ${TOWNS.map((townName) => `<option value="${townName}"></option>`).join(` `)}
+  ${destinationNames.map((townName) => `<option value="${townName}"></option>`).join(` `)}
   </datalist>`;
   return result;
 };
@@ -63,6 +63,7 @@ const getDescriptionTemplate = (description) => {
 
 const createEditingPointFormTemplate = (data) => {
   const {type, destination: {town, description, photos}, startTime, endTime, price} = data;
+  const destinationNames = getDestinationNames();
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
@@ -78,8 +79,8 @@ const createEditingPointFormTemplate = (data) => {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${type}
                     </label>
-                    <input required pattern="${TOWNS.join(`|`)}" title="Можно выбрать город только из списка!" class="event__input  event__input--destination" id="event-destination-1" name="event-destination" value="${town || ``}" list="destination-list-1">
-                ${getTownsOptionsList(TOWNS)}
+                    <input required pattern="${destinationNames.join(`|`)}" title="Можно выбрать город только из списка!" class="event__input  event__input--destination" id="event-destination-1" name="event-destination" value="${town || ``}" list="destination-list-1">
+                ${getTownsOptionsList(destinationNames)}
                   </div>
 
                   <div class="event__field-group  event__field-group--time">
@@ -209,7 +210,7 @@ export default class EditingForm extends SmartView {
     this.updateData({
       type,
       offers: [],
-      offersForType: getOffersForType(type)
+      offersForType: getOffersForTypeForClient(type)
     });
   }
 
@@ -241,7 +242,7 @@ export default class EditingForm extends SmartView {
 
   _submitFormHandler(evt) {
     evt.preventDefault();
-    this._callback.submitFormHandler(this._data);
+    this._callback.submitFormHandler(EditingForm.parseDataToPoint(this._data));
   }
 
   setSubmitFormHandler(callback) {
@@ -274,7 +275,7 @@ export default class EditingForm extends SmartView {
         {},
         point,
         {
-          offersForType: getOffersForType(point.type)}
+          offersForType: getOffersForTypeForClient(point.type)}
     );
   }
 
