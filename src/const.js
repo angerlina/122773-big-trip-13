@@ -1,3 +1,5 @@
+export const POINT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+
 export const SortType = {
   START_TIME: `start-time`,
   DURATION: `duration`,
@@ -14,7 +16,8 @@ export const UserAction = {
 export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  INIT: `INIT`
 };
 
 export const FilterType = {
@@ -27,3 +30,5 @@ export const MenuItem = {
   TABLE: `table`,
   STATS: `stats`
 };
+
+

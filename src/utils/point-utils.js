@@ -1,35 +1,21 @@
 import dayjs from "dayjs";
-import {MAX_DATE_GAP} from "../mock/data";
+import Points from "../model/points";
 
-export const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
+export const getOffersForType = (type) => {
+  return Points.getOffers().find((offer) => offer.type.toLowerCase() === type.toLowerCase()).offers;
 };
 
-export const getRandomItemFromArray = (array) => {
-  return array[getRandomInteger(0, array.length - 1)];
-};
+export const getOffersForTypeForClient = (type) => getOffersForType(type).map((offer) => Points.adaptOfferToClient(offer));
 
-export const getRandomItemsFromArray = (array) => {
-  const arrayCopy = array.slice();
-  const pickedItems = [];
-  const count = getRandomInteger(1, array.length);
-  for (let i = 0; i < count; i++) {
-    const item = getRandomItemFromArray(arrayCopy);
-    pickedItems.push(item);
-    const index = arrayCopy.indexOf(item);
-    arrayCopy.splice(index, 1);
-  }
-  return pickedItems;
-};
+export const getDestinationNames = () => Points.getDestinations().map((destination) => destination.name);
 
+export const getDestinationInfo = (destinationName) => Points.adaptDestinationToClient(
+    Points.getDestinations().find((destination) => destination.name === destinationName)
+);
 
 export const getTripCost = (points) => {
   let cost = 0;
   points.forEach((point) => {
-    cost += Number(point.price);
     cost += getPointCost(point);
   });
   return cost;
@@ -41,19 +27,6 @@ export const getPointCost = (point) => {
     cost += Number(offer.cost);
   });
   return cost;
-};
-const randomizeHoursAndMinutes = (dayjsDate) => {
-  return dayjsDate.add(getRandomInteger(0, 60), `hour`).add(getRandomInteger(0, 60), `minute`);
-};
-
-export const generateRandomDate = () => {
-  const maxDaysGap = getRandomInteger(0, MAX_DATE_GAP);
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-  return randomizeHoursAndMinutes(dayjs().add(daysGap, `day`)).toDate();
-};
-
-export const generateRandomDateAfter = (date) => {
-  return randomizeHoursAndMinutes(dayjs(date).add(getRandomInteger(0, MAX_DATE_GAP), `day`)).toDate();
 };
 
 export const getFormattedDuration = (startDate, endDate) => {

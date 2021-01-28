@@ -43,7 +43,6 @@ export default class FilterPresenter {
     if (this._currentFilter === filterType) {
       return;
     }
-
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 
