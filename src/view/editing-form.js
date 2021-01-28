@@ -1,4 +1,4 @@
-import {formatToDateTimeYear} from "../utils/utils";
+import {formatToDateTimeYear, getDuration} from "../utils/utils";
 import {POINT_TYPES, TOWNS} from "../mock/data";
 import SmartView from "./smart-view";
 import {getDestinationInfo, getOffersForType} from "../mock/point";
@@ -78,7 +78,7 @@ const createEditingPointFormTemplate = (data) => {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${town || ``}" list="destination-list-1">
+                    <input required pattern="${TOWNS.join(`|`)}" title="Можно выбрать город только из списка!" class="event__input  event__input--destination" id="event-destination-1" name="event-destination" value="${town || ``}" list="destination-list-1">
                 ${getTownsOptionsList(TOWNS)}
                   </div>
 
@@ -95,7 +95,7 @@ const createEditingPointFormTemplate = (data) => {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price || ``}">
+                    <input class="event__input  event__input--price" id="event-price-1" required type="number" name="event-price" value="${price || ``}">
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -116,7 +116,7 @@ const createEditingPointFormTemplate = (data) => {
 
 export default class EditingForm extends SmartView {
 
-  constructor(point = {type: `Flight`, destination: {}}) {
+  constructor(point = {type: `Flight`, destination: {}, offers: []}) {
     super();
     this._data = EditingForm.parsePointToData(point);
     this._startTimeDatepicker = null;
@@ -127,6 +127,9 @@ export default class EditingForm extends SmartView {
     this._changeDestinationHandler = this._changeDestinationHandler.bind(this);
     this._inputPriceHandler = this._inputPriceHandler.bind(this);
     this._changeOffersHandler = this._changeOffersHandler.bind(this);
+    this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
+    this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
+    this._deletePointClickHandler = this._deletePointClickHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
   }
@@ -135,6 +138,7 @@ export default class EditingForm extends SmartView {
     this._setInnerHandlers();
     this.setSubmitFormHandler(this._callback.submitFormHandler);
     this.setCloseFormClickHandler(this._callback.closeFormClickHandler);
+    this.setDeletePointClickHandler(this._callback.deletePointClickHandler);
     this._setDatepicker();
   }
 
@@ -163,16 +167,17 @@ export default class EditingForm extends SmartView {
 
   _startTimeChangeHandler([userDate]) {
     this.updateData({
-      startTime: dayjs(userDate),
+      startTime: dayjs(userDate).toDate(),
+      duration: getDuration(this._data.startTime, this._data.endTime)
     });
   }
 
   _endTimeChangeHandler([userDate]) {
     this.updateData({
-      endTime: dayjs(userDate),
+      endTime: dayjs(userDate).toDate(),
+      duration: getDuration(this._data.startTime, this._data.endTime)
     });
   }
-
 
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-group`).addEventListener(`change`, this._changeEventTypeHandler);
@@ -242,6 +247,16 @@ export default class EditingForm extends SmartView {
   setSubmitFormHandler(callback) {
     this._callback.submitFormHandler = callback;
     this.getElement().addEventListener(`submit`, this._submitFormHandler);
+  }
+
+  _deletePointClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deletePointClickHandler(this._data);
+  }
+
+  setDeletePointClickHandler(callback) {
+    this._callback.deletePointClickHandler = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deletePointClickHandler);
   }
 
   getTemplate() {

@@ -5,7 +5,7 @@ export const sortByStartTime = (points) => points.sort(
 );
 
 export const sortByDuration = (points) => points.sort(
-    (sort1, sort2) => compare(sort2.duration, sort1.duration)
+    (sort1, sort2) => compare(sort1.duration, sort2.duration)
 );
 
 export const sortByPrice = (points) => points.sort(

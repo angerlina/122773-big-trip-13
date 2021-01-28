@@ -1,6 +1,6 @@
 import {formatToMonthDay} from "../utils/utils";
 import dayjs from "dayjs";
-import AbstractView from "./AbstractView";
+import AbstractView from "./abstract-view";
 
 export const createRouteInfoTemplate = (points) => {
   if (points && points.length) {

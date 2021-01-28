@@ -1,10 +1,10 @@
 import flatpickr from "flatpickr";
 
-const fateFormat = `d/m/y H:i`;
+const dateFormat = `d/m/y H:i`;
 export const getDatePicker = (element, defaultDate, changeHandler) => flatpickr(
     element,
     {
-      dateFormat: fateFormat,
+      dateFormat,
       enableTime: true,
       defaultDate,
       onChange: changeHandler

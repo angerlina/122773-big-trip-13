@@ -1,6 +1,7 @@
 import EditingForm from "../view/editing-form";
 import Point from "../view/point";
 import {remove, render, RenderPosition, replaceChild} from "../utils/render";
+import {UpdateType, UserAction} from "../const";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -19,6 +20,7 @@ export default class PointPresenter {
     this._handleOpenForm = this._handleOpenForm.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._handleToggleFavorite = this._handleToggleFavorite.bind(this);
+    this._handleDeletePointClick = this._handleDeletePointClick.bind(this);
     this._mode = Mode.DEFAULT;
   }
 
@@ -48,6 +50,7 @@ export default class PointPresenter {
     this._pointEditComponent = new EditingForm(this._point);
     this._pointEditComponent.setSubmitFormHandler(this._handleFormSubmit);
     this._pointEditComponent.setCloseFormClickHandler(this._handleCloseForm);
+    this._pointEditComponent.setDeletePointClickHandler(this._handleDeletePointClick);
     if (!prevPointEditComponent) {
       render(this._pointListComponent, this._pointComponent, RenderPosition.BEFOREEND);
       return;
@@ -71,7 +74,13 @@ export default class PointPresenter {
 
   _handleToggleFavorite(point) {
     this._changeData(
-        Object.assign({}, point, {isFavorite: !point.isFavorite})
+        UserAction.UPDATE_POINT, UpdateType.PATCH, Object.assign({}, point, {isFavorite: !point.isFavorite})
+    );
+  }
+
+  _handleDeletePointClick(point) {
+    this._changeData(
+        UserAction.DELETE_POINT, UpdateType.MAJOR, point
     );
   }
 
@@ -92,7 +101,7 @@ export default class PointPresenter {
   }
 
   _handleFormSubmit(point) {
-    this._changeData(point);
+    this._changeData(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
     this._handleCloseForm();
   }
 

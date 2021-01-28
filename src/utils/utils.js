@@ -1,21 +1,6 @@
 import dayjs from "dayjs";
 import {MAX_DATE_GAP} from "../mock/data";
 
-
-export const updateItem = (items, itemToUpdate) => {
-  const index = items.findIndex((item) => item.id === itemToUpdate.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    itemToUpdate,
-    ...items.slice(index + 1)
-  ];
-};
-
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -45,13 +30,18 @@ export const getTripCost = (points) => {
   let cost = 0;
   points.forEach((point) => {
     cost += Number(point.price);
-    point.offers.forEach((offer) => {
-      cost += Number(offer.cost);
-    });
+    cost += getPointCost(point);
   });
   return cost;
 };
 
+export const getPointCost = (point) => {
+  let cost = point.price;
+  point.offers.forEach((offer) => {
+    cost += Number(offer.cost);
+  });
+  return cost;
+};
 const randomizeHoursAndMinutes = (dayjsDate) => {
   return dayjsDate.add(getRandomInteger(0, 60), `hour`).add(getRandomInteger(0, 60), `minute`);
 };
@@ -66,7 +56,7 @@ export const generateRandomDateAfter = (date) => {
   return randomizeHoursAndMinutes(dayjs(date).add(getRandomInteger(0, MAX_DATE_GAP), `day`)).toDate();
 };
 
-export const getDuration = (startDate, endDate) => {
+export const getFormattedDuration = (startDate, endDate) => {
   const differenceInMinutes = dayjs(endDate).diff(startDate, `minute`);
   const differenceInHours = dayjs(endDate).diff(startDate, `hour`);
   const differenceInDays = dayjs(endDate).diff(startDate, `day`);
@@ -78,6 +68,8 @@ export const getDuration = (startDate, endDate) => {
   return `${differenceInDays}D ${(differenceInHours - differenceInDays * 24) % 60}H ${differenceInMinutes % 60}M`;
 };
 
+export const getDuration = (startTime, endTime) => (dayjs(endTime).diff(startTime, `minute`));
+
 export const formatToMonthDay = (date) => {
   return dayjs(date).format(`MMM D`);
 };
@@ -87,7 +79,10 @@ export const formatToDateTime = (date) => {
 };
 
 export const formatToDateTimeYear = (date) => {
-  return dayjs(date).format(`DD/MM/YYYY HH:mm`);
+  if (!date) {
+    return ``;
+  }
+  return dayjs(date).format(`DD/MM/YY HH:mm`);
 };
 
 export const formatToTime = (date) => {
@@ -102,6 +97,7 @@ export const getStartEndDateTime = (startDateTime, endDateTime) => {
   }
   return (`${formatToDateTimeYear(startDateTime)}-${formatToDateTimeYear(endDateTime)}`);
 };
+
 
 export const compare = (first, second) => {
   if (first < second) {
