@@ -25,7 +25,7 @@ const pointListPresenter = new PointListPresenter(tripEventsContainer, pointsMod
 const filterPresenter = new FilterPresenter(controlsMainElement, filtersModel, pointsModel);
 const routeInfoPresenter = new RouteInfoPresenter(tripMainElement, pointsModel);
 const tripCostPresenter = new TripCostPresenter(tripMainElement, pointsModel);
-let statisticsComponent = new Statistics();
+const statisticsComponent = new Statistics();
 
 statisticsComponent.hide();
 siteMenuComponent.setMenuItem(MenuItem.TABLE);
