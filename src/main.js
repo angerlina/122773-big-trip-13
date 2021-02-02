@@ -9,6 +9,7 @@ import Statistics from "./view/statistics";
 import Api from "./api";
 import RouteInfoPresenter from "./presenter/route-info-presenter";
 import TripCostPresenter from "./presenter/trip-cost-presenter";
+import AddNewPoint from "./view/add-new-point";
 const AUTHORIZATION = `Basic ${Math.random().toString(36).substring(7)}`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 const api = new Api(END_POINT, AUTHORIZATION);
@@ -17,6 +18,16 @@ const api = new Api(END_POINT, AUTHORIZATION);
 const tripMainElement = document.querySelector(`.trip-main`);
 const controlsMainElement = document.querySelector(`.trip-main__trip-controls`);
 const tripEventsContainer = document.querySelector(`.trip-events`);
+
+const addNewPoint = new AddNewPoint();
+
+const addNewPointClickHandler = () => {
+  showPointsTable();
+  pointListPresenter.createPoint();
+};
+
+addNewPoint.setAddNewPointClickHandler(addNewPointClickHandler);
+
 const siteMenuComponent = new Menu();
 
 const pointsModel = new Points();
@@ -51,14 +62,7 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  showPointsTable();
-  pointListPresenter.createPoint();
-});
-
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-
 
 pointListPresenter.init();
 tripCostPresenter.init();
@@ -81,6 +85,7 @@ api.getOffers()
     pointsModel.setPoints(UpdateType.INIT, points);
     render(tripEventsContainer, statisticsComponent, RenderPosition.AFTERBEGIN);
     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+    render(tripMainElement, addNewPoint, RenderPosition.BEFOREEND);
   }
   ).catch(handleErrorInDataLoad);
 
