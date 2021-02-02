@@ -6,7 +6,7 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-const getElement = (elementOrViewObject) => ((elementOrViewObject instanceof AbstractView) ? elementOrViewObject.getElement() : elementOrViewObject);
+const getElement = (elementOrView) => ((elementOrView instanceof AbstractView) ? elementOrView.getElement() : elementOrView);
 
 
 export const RenderPosition = {

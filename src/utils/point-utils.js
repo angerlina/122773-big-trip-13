@@ -29,6 +29,10 @@ export const getPointCost = (point) => {
   return cost;
 };
 
+const makeZeroInBeginning = (number) => {
+  return String(number).padStart(2, `0`);
+};
+
 export const getFormattedDuration = (startDate, endDate) => {
   const differenceInMinutes = dayjs(endDate).diff(startDate, `minute`);
   const differenceInHours = dayjs(endDate).diff(startDate, `hour`);
@@ -36,9 +40,9 @@ export const getFormattedDuration = (startDate, endDate) => {
   if (differenceInMinutes < 60) {
     return `${differenceInMinutes}M`;
   } if (differenceInDays < 1) {
-    return `${differenceInHours}H ${differenceInMinutes % 60}M`;
+    return `${makeZeroInBeginning(differenceInHours)}H ${makeZeroInBeginning(differenceInMinutes % 60)}M`;
   }
-  return `${differenceInDays}D ${(differenceInHours - differenceInDays * 24) % 60}H ${differenceInMinutes % 60}M`;
+  return `${makeZeroInBeginning(differenceInDays)}D ${makeZeroInBeginning((differenceInHours - differenceInDays * 24) % 60)}H ${makeZeroInBeginning(differenceInMinutes % 60)}M`;
 };
 
 export const getDuration = (startTime, endTime) => (dayjs(endTime).diff(startTime, `minute`));

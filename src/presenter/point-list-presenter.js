@@ -4,7 +4,7 @@ import {remove, render, RenderPosition} from "../utils/render";
 import PointPresenter, {State as PointPresenterViewState} from "./point-presenter";
 import Sort from "../view/sort";
 import {FilterType, SortType, UpdateType, UserAction} from "../const";
-import {sortByDuration, sortByPrice, sortByStartTimeDesc} from "../utils/sort";
+import {sortByDuration, sortByPrice, sortByStartTimeAsc} from "../utils/sort";
 import {filter} from "../utils/filter";
 import PointNewPresenter from "./point-new-presenter";
 import Loading from "../view/loading.js";
@@ -61,7 +61,7 @@ export default class PointListPresenter {
     const filterType = this._filterModel.getFilter();
     const filteredPoints = filter[filterType](points);
     switch (this._currentSortType) {
-      case SortType.START_TIME: sortByStartTimeDesc(filteredPoints);
+      case SortType.START_TIME: sortByStartTimeAsc(filteredPoints);
         break;
       case SortType.PRICE: sortByPrice(filteredPoints);
         break;
@@ -192,6 +192,7 @@ export default class PointListPresenter {
   }
 
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
     Object
       .values(this._pointPresenters)
       .forEach((presenter) => presenter.resetView());
